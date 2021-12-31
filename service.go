@@ -1,12 +1,11 @@
 package main
 
 import (
-	"database/sql"
 	"net/http"
 	"strconv"
 
-	"github.com/labstack/echo"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/labstack/echo"
 )
 
 type user struct {
@@ -14,10 +13,7 @@ type user struct {
 	Name string `json:"name"`
 }
 
-var (
-	idm   = 5
-	db, _ = sql.Open("mysql", "Tung:Tung1272000@tcp(127.0.0.1:3306)/User")
-)
+var	idm   = 5
 
 //Create User
 func createUser(c echo.Context) error {
@@ -85,18 +81,4 @@ func getAllUsers(c echo.Context) error {
       sliceUsers = append(sliceUsers, u)
    }
    return c.JSON(http.StatusOK, sliceUsers)
-}
-
-func main() {
-	e := echo.New()
-
-	//routes
-	e.GET("/users", getAllUsers)
-	e.POST("/users", createUser)
-	e.GET("/users/:id", getUser)
-	e.PUT("/users/:id", updateUser)
-	e.DELETE("/users/:id", deleteUser)
-
-	//start server
-	e.Start(":1207")
 }
