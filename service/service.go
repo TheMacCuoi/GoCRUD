@@ -1,6 +1,7 @@
-package main
+package service
 
 import (
+	"database/sql"
 	"net/http"
 	"strconv"
 
@@ -13,10 +14,13 @@ type user struct {
 	Name string `json:"name"`
 }
 
-var	idm   = 5
+var (
+	idm   = 5
+	db, _ = sql.Open("mysql", "Tung:Tung1272000@tcp(127.0.0.1:3306)/User")
+)
 
 //Create User
-func createUser(c echo.Context) error {
+func CreateUser(c echo.Context) error {
 	u := &user{
 		ID: idm,
 	}
@@ -24,7 +28,7 @@ func createUser(c echo.Context) error {
 		return err
 	}
 	insertDB, err := db.Prepare("INSERT INTO users (id, name) values (?,?)")
-	if err!=nil {
+	if err != nil {
 		panic(err.Error())
 	}
 	insertDB.Exec(u.ID, u.Name)
@@ -34,24 +38,24 @@ func createUser(c echo.Context) error {
 }
 
 //Show single User
-func getUser(c echo.Context) error {
+func GetUser(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	result, _ := db.Query("SELECT * FROM users WHERE id = ?", id)
 	var u user
-    _ = result.Scan(&u.ID, &u.Name)
+	_ = result.Scan(&u.ID, &u.Name)
 	defer result.Close()
 	return c.JSON(http.StatusOK, u)
 }
 
 //Update User
-func updateUser(c echo.Context) error {
+func UpdateUser(c echo.Context) error {
 	u := new(user)
 	if err := c.Bind(u); err != nil {
 		return err
 	}
 	id, _ := strconv.Atoi(c.Param("id"))
 	updateDB, err := db.Prepare("UPDATE users SET name = ? WHERE id = ?")
-	if err!=nil {
+	if err != nil {
 		panic(err.Error())
 	}
 	updateDB.Exec(u.Name, id)
@@ -60,10 +64,10 @@ func updateUser(c echo.Context) error {
 }
 
 //Del User
-func deleteUser(c echo.Context) error {
+func DeleteUser(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	deleteUser, err := db.Prepare("DELETE FROM users WHERE id = ?")
-	if err!=nil {
+	if err != nil {
 		panic(err.Error())
 	}
 	deleteUser.Exec(id)
@@ -72,13 +76,13 @@ func deleteUser(c echo.Context) error {
 }
 
 //Show all user
-func getAllUsers(c echo.Context) error {
+func GetAllUsers(c echo.Context) error {
 	var sliceUsers []user
-   result, _ := db.Query("SELECT * FROM users")
-   for result.Next() {
-      var u user
-      _ = result.Scan(&u.ID, &u.Name)
-      sliceUsers = append(sliceUsers, u)
-   }
-   return c.JSON(http.StatusOK, sliceUsers)
+	result, _ := db.Query("SELECT * FROM users")
+	for result.Next() {
+		var u user
+		_ = result.Scan(&u.ID, &u.Name)
+		sliceUsers = append(sliceUsers, u)
+	}
+	return c.JSON(http.StatusOK, sliceUsers)
 }
