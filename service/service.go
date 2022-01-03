@@ -2,6 +2,7 @@ package service
 
 import (
 	"database/sql"
+	"goCRUD/ulti"
 	"net/http"
 	"strconv"
 
@@ -13,14 +14,14 @@ type user struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
-
 var (
 	idm   = 5
-	db, _ = sql.Open("mysql", "Tung:Tung1272000@tcp(127.0.0.1:3306)/User")
 )
 
 //Create User
 func CreateUser(c echo.Context) error {
+	config, _ := ulti.LoadConfig(".")
+	db, _ := sql.Open(config.DBDriver, config.DBSource)
 	u := &user{
 		ID: idm,
 	}
@@ -39,6 +40,8 @@ func CreateUser(c echo.Context) error {
 
 //Show single User
 func GetUser(c echo.Context) error {
+	config, _ := ulti.LoadConfig(".")
+	db, _ := sql.Open(config.DBDriver, config.DBSource)
 	id, _ := strconv.Atoi(c.Param("id"))
 	result, _ := db.Query("SELECT * FROM users WHERE id = ?", id)
 	var u user
@@ -49,6 +52,8 @@ func GetUser(c echo.Context) error {
 
 //Update User
 func UpdateUser(c echo.Context) error {
+	config, _ := ulti.LoadConfig(".")
+	db, _ := sql.Open(config.DBDriver, config.DBSource)
 	u := new(user)
 	if err := c.Bind(u); err != nil {
 		return err
@@ -65,6 +70,8 @@ func UpdateUser(c echo.Context) error {
 
 //Del User
 func DeleteUser(c echo.Context) error {
+	config, _ := ulti.LoadConfig(".")
+	db, _ := sql.Open(config.DBDriver, config.DBSource)
 	id, _ := strconv.Atoi(c.Param("id"))
 	deleteUser, err := db.Prepare("DELETE FROM users WHERE id = ?")
 	if err != nil {
@@ -77,6 +84,8 @@ func DeleteUser(c echo.Context) error {
 
 //Show all user
 func GetAllUsers(c echo.Context) error {
+	config, _ := ulti.LoadConfig(".")
+	db, _ := sql.Open(config.DBDriver, config.DBSource)
 	var sliceUsers []user
 	result, _ := db.Query("SELECT * FROM users")
 	for result.Next() {

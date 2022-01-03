@@ -1,12 +1,11 @@
-package main
-
+package router
 import (
 	"github.com/labstack/echo"
 	
 	service "goCRUD/service"
 )
 
-func main() {
+func Api() {
 	e := echo.New()
 
 	//routes
