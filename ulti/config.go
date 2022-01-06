@@ -1,8 +1,6 @@
 package ulti
 
 import (
-	"database/sql"
-
 	"github.com/spf13/viper"
 )
 
@@ -26,10 +24,4 @@ func LoadConfig(path string) (config Config, err error) {
 	}
 	err = viper.Unmarshal(&config)
 	return
-}
-
-func Init() (db *sql.DB) {
-	config, _ := LoadConfig(".")
-	db, _ = sql.Open(config.DBDriver, config.DBSource)
-	return db
 }
