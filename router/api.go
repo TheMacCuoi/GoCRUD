@@ -1,13 +1,14 @@
 package router
+
 import (
 	"github.com/labstack/echo"
-	
-	"goCRUD/service"
+
+	"goCRUD/handler"
 )
 
 func Api() {
 	e := echo.New()
- 	dber := service.UserHandler{}
+	dber := handler.UserHandler{}
 	//routes
 	e.GET("/users", dber.GetAllUsers)
 	e.POST("/users", dber.CreateUser)

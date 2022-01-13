@@ -1,4 +1,4 @@
-package service
+package handler
 
 import (
 	"goCRUD/db"
@@ -9,69 +9,57 @@ import (
 	"github.com/labstack/echo"
 )
 
-type user struct {
+type User struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
 var (
 	idm   = 5
 )
+type handler interface{
+	CreateUser(c echo.Context) error
+	GetUser(c echo.Context) error
+	UpdateUser(c echo.Context) error
+	DeleteUser(c echo.Context) error
+	GetAllUsers(c echo.Context) error
+}
 type UserHandler struct {
-	dber db.SQLRepo
+	dber db.UserRepo
 }
 //Create User
 func (d *UserHandler) CreateUser(c echo.Context) error {
-	u := &user{
-		ID: idm,
-	}
-	if err := c.Bind(u); err != nil {
-		return err
-	}
-	d.dber.InsertDB(u.ID, u.Name)
-	idm++
+	u,_ := d.dber.InsertUser(c)
 	return c.JSON(http.StatusCreated, u)
 }
 
 //Show single User
 func (d *UserHandler) GetUser(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
-	var sliceUsers []user
-	result := d.dber.SelectDB(id)
-	for result.Next() {
-		var u user
+	//var sliceUsers []User
+	result, _ := d.dber.SelectUser(c)
+	/*for result.Next() {
+		var u User
 		_ = result.Scan(&u.ID, &u.Name)
 		sliceUsers = append(sliceUsers, u)
-	}
-	return c.JSON(http.StatusOK, sliceUsers)
+	}*/
+	return c.JSON(http.StatusOK, result)
 }
 
 //Update User
 func (d *UserHandler) UpdateUser(c echo.Context) error {
-	u := new(user)
-	if err := c.Bind(u); err != nil {
-		return err
-	}
-	id, _ := strconv.Atoi(c.Param("id"))
-	d.dber.UpdateDB(id, u.Name)
+	u, _ := d.dber.UpdateUser(c)
 	return c.JSON(http.StatusOK, u)
 }
 
 //Del User
 func (d *UserHandler) DeleteUser(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	d.dber.DeleteDB(id)
-	u := "deleted user id: " + strconv.Itoa(id)
+	d.dber.DeleteUser(c)
+	u := "deleted User id: " + strconv.Itoa(id)
 	return c.JSON(http.StatusOK, u)
 }
 
-//Show all user
+//Show all User
 func (d *UserHandler) GetAllUsers(c echo.Context) error {
-	var sliceUsers []user
-	result := d.dber.SelectAllDB()
-	for result.Next() {
-		var u user
-		_ = result.Scan(&u.ID, &u.Name)
-		sliceUsers = append(sliceUsers, u)
-	}
-	return c.JSON(http.StatusOK, sliceUsers)
+	result,_ := d.dber.SelectAllUser(c)
+	return c.JSON(http.StatusOK, result)
 }
