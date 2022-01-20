@@ -6,7 +6,6 @@ require (
 	github.com/go-delve/delve v1.8.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/jinzhu/gorm v1.9.16
-	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/sirupsen/logrus v1.6.0
@@ -14,5 +13,5 @@ require (
 	golang.org/x/tools/gopls v0.7.4 // indirect
 	gorm.io/driver/mysql v1.2.3
 	gorm.io/driver/postgres v1.2.3
-	gorm.io/gorm v1.22.4
+	gorm.io/gorm v1.22.5
 )

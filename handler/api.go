@@ -1,14 +1,18 @@
-package router
+package handler
 
 import (
-	"github.com/labstack/echo"
+	"goCRUD/repository"
 
-	"goCRUD/handler"
+	"github.com/labstack/echo"
 )
 
-func Api() {
+type UserHandler struct {
+	dber repository.UserRepo
+}
+
+func Api() *echo.Echo {
 	e := echo.New()
-	dber := handler.UserHandler{}
+	dber := UserHandler{}
 	//routes
 	e.GET("/users", dber.GetAllUsers)
 	e.POST("/users", dber.CreateUser)
@@ -16,6 +20,5 @@ func Api() {
 	e.PUT("/users/:id", dber.UpdateUser)
 	e.DELETE("/users/:id", dber.DeleteUser)
 
-	//start server
-	e.Start(":1207")
+	return e
 }

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"goCRUD/db"
 	"net/http"
 	"strconv"
 
@@ -13,22 +12,11 @@ type User struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
-var (
-	idm   = 5
-)
-type handler interface{
-	CreateUser(c echo.Context) error
-	GetUser(c echo.Context) error
-	UpdateUser(c echo.Context) error
-	DeleteUser(c echo.Context) error
-	GetAllUsers(c echo.Context) error
-}
-type UserHandler struct {
-	dber db.UserRepo
-}
+
+
 //Create User
 func (d *UserHandler) CreateUser(c echo.Context) error {
-	u,_ := d.dber.InsertUser(c)
+	u, _ := d.dber.InsertUser(c)
 	return c.JSON(http.StatusCreated, u)
 }
 
@@ -60,6 +48,6 @@ func (d *UserHandler) DeleteUser(c echo.Context) error {
 
 //Show all User
 func (d *UserHandler) GetAllUsers(c echo.Context) error {
-	result,_ := d.dber.SelectAllUser(c)
+	result, _ := d.dber.SelectAllUser(c)
 	return c.JSON(http.StatusOK, result)
 }

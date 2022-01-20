@@ -2,10 +2,13 @@ package main
 
 import (
 	"goCRUD/db"
-	"goCRUD/router"
+	"goCRUD/handler"
 )
 
 func main() {
 	db.Init()
-	router.Api()
+	e := handler.Api()
+
+	//start server
+	e.Start(":1207")
 }

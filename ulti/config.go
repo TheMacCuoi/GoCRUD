@@ -8,9 +8,9 @@ import (
 type Config struct {
 	DB_USER string
 	DB_PASS string
-	DB_PORT     string
-	DB_HOST     string
-	DB_NAME     string
+	DB_PORT string
+	DB_HOST string
+	DB_NAME string
 }
 
 func LoadConfig(path string) (config Config, err error) {
