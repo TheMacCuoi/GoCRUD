@@ -1,24 +1,26 @@
 package handler
 
 import (
-	"goCRUD/repository"
 
 	"github.com/labstack/echo"
+	"gorm.io/gorm"
 )
 
-type UserHandler struct {
-	dber repository.UserRepo
+type Server struct {
+	db *gorm.DB
 }
 
-func Api() *echo.Echo {
-	e := echo.New()
-	dber := UserHandler{}
-	//routes
-	e.GET("/users", dber.GetAllUsers)
-	e.POST("/users", dber.CreateUser)
-	e.GET("/users/:id", dber.GetUser)
-	e.PUT("/users/:id", dber.UpdateUser)
-	e.DELETE("/users/:id", dber.DeleteUser)
 
-	return e
+func Api(db *gorm.DB) {
+	e := echo.New()
+	s := &Server{db: db}
+	//routes
+	e.GET("/users", s.GetAllUsers)
+	e.POST("/users", s.CreateUser)
+	e.GET("/users/:id", s.GetUser)
+	e.PUT("/users/:id", s.UpdateUser)
+	e.DELETE("/users/:id", s.DeleteUser)
+
+	//start server
+	e.Start(":1207")
 }
