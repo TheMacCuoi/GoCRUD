@@ -19,6 +19,9 @@ type User struct {
 //Create User
 func (s *Server) CreateUser(c echo.Context) (err error) {
 	u := new(model.User)
+	if err = c.Bind(u); err != nil {
+		return
+	}
 	s.db.Create(&u)
 	return c.JSONPretty(http.StatusCreated, u, " ")
 }

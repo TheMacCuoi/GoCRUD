@@ -1,8 +1,8 @@
 package handler
 
 import (
-
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"gorm.io/gorm"
 )
 
@@ -13,6 +13,7 @@ type Server struct {
 
 func Api(db *gorm.DB) {
 	e := echo.New()
+	e.Use(middleware.CORS())
 	s := &Server{db: db}
 	//routes
 	e.GET("/users", s.GetAllUsers)
