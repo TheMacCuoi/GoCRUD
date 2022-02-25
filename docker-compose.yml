@@ -1,0 +1,48 @@
+# Use root/example as user/password credentials
+version: '3.7'
+
+services:
+
+  db:
+    image: mysql
+    volumes: 
+    - ./tmp/db:/var/lib/mysql
+    networks:
+      - intranet
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sieunhantung96
+      MYSQL_DATABASE: User
+    ports:
+      - 3308:3308
+
+  gocrud:
+    networks:
+      - intranet
+    image: tung1272000/gocrud
+    environment:
+      DB_USER: "root"
+      DB_PASS: "sieunhantung96"
+      DB_NAME: "User"
+    restart: always
+    command: go run main.go
+    ports:
+      - 1207:1207
+      
+  caddy:
+    networks:
+      - intranet
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - 127:127
+    volumes:
+      - ./caddy:/etc/caddy
+      - ./root:/usr/share/caddy
+      - /data/caddy/data:/data
+      - /data/caddy/config:/config
+    #command: caddy start
+
+
+networks:
+  intranet: null

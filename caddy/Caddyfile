@@ -1,0 +1,5 @@
+:127 {
+	root * /usr/share/caddy/dist
+	try_files {path} /
+	file_server
+}
